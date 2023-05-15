@@ -30,7 +30,7 @@ void ReadFile(string fname, double (&A)[N])
 int main()
 {
 
-    double amps[50];
+    double amps[N];
     string file="LAB2_dados.txt";
 
     ReadFile(file, amps);
