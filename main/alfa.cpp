@@ -11,7 +11,7 @@
 
 using namespace std;
 
-const int N = 1024;
+const int N = 1024; const int Maria = 0; const int Manel = 200;
 
 void ReadFileMCA(string fname, double (&Chnl)[N], double (&Cnt)[1024], double (&ROI)[N])
     {
@@ -43,23 +43,22 @@ void ReadFileMCA(string fname, double (&Chnl)[N], double (&Cnt)[1024], double (&
                 cout << valor << endl;
                 valores.push_back(valor);
             }
-         //   double canal=stod(valores[0]);
+            double canal=stod(valores[0]);
             double contagem=stod(valores[1]);
             double nrROI=stod(valores[2]);
-          //  Chnl[ind]=canal;
+           Chnl[ind]=canal;
             Cnt[ind]=contagem;
             ROI[ind]=nrROI;
             
             ind++;
         }
-        double cu= stod("          0");
         DataFile.close();
     }
 
 int main()
 {
     double channels[N]; double contagens[N]; double ROIs[N];
-    string nome = "4C_CESIO.ASC";
+    string nome = "4C_CESIO.txt";
 
     ReadFileMCA(nome, channels, contagens, ROIs);
 
@@ -69,7 +68,7 @@ int main()
     TCanvas c("canvas", "grafico", 200, 10, 1920, 1080);
     
     // Criar o objeto 
-    TH1F *h1 = new TH1F("h1", "histograma", 20, 0, 10);
+    TH1F *h1 = new TH1F("h1", "histograma", Manel-Maria, Maria, Manel);
 
     for (int i = 1; i < N; i++)
     {
