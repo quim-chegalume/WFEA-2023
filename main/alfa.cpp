@@ -4,6 +4,7 @@
 #include "TGraph.h"
 #include "TCanvas.h"
 #include "TApplication.h"
+#include "TF1.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -11,7 +12,7 @@
 
 using namespace std;
 
-const int N = 1024; const int Maria = 0; const int Manel = 200;
+const int N = 1024;
 
 void ReadFileMCA(string fname, double (&Chnl)[N], double (&Cnt)[1024], double (&ROI)[N])
     {
@@ -40,13 +41,12 @@ void ReadFileMCA(string fname, double (&Chnl)[N], double (&Cnt)[1024], double (&
             vector<string> valores;
             while (getline(iss, valor, ','))
             {
-                cout << valor << endl;
                 valores.push_back(valor);
             }
             double canal=stod(valores[0]);
             double contagem=stod(valores[1]);
             double nrROI=stod(valores[2]);
-           Chnl[ind]=canal;
+            Chnl[ind]=canal;
             Cnt[ind]=contagem;
             ROI[ind]=nrROI;
             
@@ -58,7 +58,7 @@ void ReadFileMCA(string fname, double (&Chnl)[N], double (&Cnt)[1024], double (&
 int main()
 {
     double channels[N]; double contagens[N]; double ROIs[N];
-    string nome = "4C_CESIO.txt";
+    string nome = "PIRO2AM5.ASC";
 
     ReadFileMCA(nome, channels, contagens, ROIs);
 
@@ -68,13 +68,38 @@ int main()
     TCanvas c("canvas", "grafico", 200, 10, 1920, 1080);
     
     // Criar o objeto 
-    TH1F *h1 = new TH1F("h1", "histograma", Manel-Maria, Maria, Manel);
+    TH1F *h1 = new TH1F("h1", "histograma", 1024, 0, 1023);
 
     for (int i = 1; i < N; i++)
     {
         cout << channels[i] << contagens[i] << endl;
         h1->Fill(channels[i], contagens[i]);
     }
+    h1->SetLineWidth(0);
+    h1->SetMarkerStyle(5);
+
+    TF1 *f1 = new TF1("f1", "gaus", 420, 440);
+    f1->SetLineColor(kRed);
+    
+    TF1 *f2 = new TF1("f2", "gaus", 450, 470);
+    f2->SetLineColor(kBlue);
+
+    TF1 *f3 = new TF1("f3", "gaus", 470, 510);
+    f3->SetLineColor(kPink);
+
+    TF1 *total = new TF1("total", "gaus(0) + gaus(3) + gaus(6)", 410, 510);
+    total->SetLineColor(kBlack);
+
+    h1->Fit(f1, "WR");
+    h1->Fit(f2, "WR+");
+    h1->Fit(f3, "WR+");
+    double par[9];
+    f1->GetParameters(&par[0]);
+    f2->GetParameters(&par[3]);
+    f3->GetParameters(&par[6]);
+    total->SetParameters(par);
+
+    h1->Fit(total, "WR+");
 
     c.Update();
     h1->Draw();
