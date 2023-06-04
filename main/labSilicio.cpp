@@ -48,7 +48,7 @@ int main()
     gStyle->SetOptFit(kTRUE);
 
     // Definir titulo e labels dos eixos
-    gr->SetTitle("1ex TGraph");
+    gr->SetTitle("Detector calibration");
     gr->GetXaxis()->SetTitle("Canais");
     gr->GetYaxis()->SetTitle("Energias"); 
 

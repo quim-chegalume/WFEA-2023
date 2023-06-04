@@ -69,11 +69,10 @@ int main()
     TCanvas c("canvas", "grafico", 200, 10, 1920, 1080);
     
     // Criar o objeto 
-    TH1F *h1 = new TH1F("h1", "Espetro de emissao alfa do americio", 1024, 0, 1023);
+    TH1F *h1 = new TH1F("Parametros", "Espetro de emissao alfa do americio", 1024, 0, 1023);
 
     for (int i = 1; i < N; i++)
     {
-        cout << channels[i] << contagens[i] << endl;
         h1->Fill(channels[i], contagens[i]);
     }
     h1->SetLineWidth(0);
@@ -81,40 +80,47 @@ int main()
     h1->SetMarkerSize(1);
     h1->SetMarkerColor(13);
 
-    TF1 *f1 = new TF1("f1", "gaus", 420, 440);
+    //tres gaussianas dos picos
+    TF1 *f1 = new TF1("f1", "gaus", 0, 1023);
     f1->SetLineColor(kRed);
-    f1->SetLineStyle(9);
     
-    TF1 *f2 = new TF1("f2", "gaus", 450, 470);
+    TF1 *f2 = new TF1("f2", "gaus", 0, 1023);
     f2->SetLineColor(kBlue);
-    f2->SetLineStyle(9);
 
-    TF1 *f3 = new TF1("f3", "gaus", 470, 510);
-    f3->SetLineColor(kPink);
-    f3->SetLineStyle(9);
+    TF1 *f3 = new TF1("f3", "gaus", 0, 1023);
+    f3->SetLineColor(kGreen);
 
-    TF1 *total = new TF1("total", "gaus(0) + gaus(3) + gaus(6)", 410, 510);
+    //soma das tres
+    TF1 *total = new TF1("total", "gaus(0) + gaus(3) + gaus(6)", 0, 1023);
     total->SetLineColor(kBlack);
     total->SetLineWidth(4);
+    total->SetLineStyle(9);
+    total->SetParNames("1Const", "1Media", "1Sigma",
+                       "2Const", "2Media", "2Sigma",
+                       "3Const", "3Media", "3Sigma");
 
-    h1->Fit(f1, "WR");
-    h1->Fit(f2, "WR+");
-    h1->Fit(f3, "WR+");
+    //fits dos 3 picos
+    h1->Fit(f1, "0W", "", 420, 440);
+    h1->Fit(f2, "0W", "", 450, 470);
+    h1->Fit(f3, "0W", "", 470, 510);
+    
+    //fit dos 3 picos somados
     double par[9];
     f1->GetParameters(&par[0]);
     f2->GetParameters(&par[3]);
     f3->GetParameters(&par[6]);
     total->SetParameters(par);
+    h1->Fit(total, "0W", "", 420, 510);
 
-    h1->Fit(total, "WR+");
-
+    //eixos
     h1 ->GetXaxis()->SetRange(410,510);
     h1 ->GetXaxis()->SetTitle("Canais");
-    h1 ->GetYaxis()->SetRangeUser(0,1500);
+    h1 ->GetYaxis()->SetRangeUser(0,1300);
     h1 ->GetYaxis()->SetTitle("Eventos");
 
     c.Update();
     h1->Draw();
+    f1->Draw("SAME"); f2->Draw("SAME"); f3->Draw("SAME"); total->Draw("SAME");
     c.SaveAs("ex1.png");
     c.WaitPrimitive();
 
