@@ -56,6 +56,8 @@ void ReadFileMCA(string fname, double (&Chnl)[N], double (&Cnt)[1024], double (&
         DataFile.close();
     }
 
+double energy(double canl) {return 1.74992*canl+4637.77;}
+
 int main()
 {
     double channels[N]; double contagens[N]; double ROIs[N];
@@ -63,17 +65,18 @@ int main()
 
     ReadFileMCA(nome, channels, contagens, ROIs);
 
+
     TApplication App("A", nullptr, nullptr);
 
     // Canvas onde é desenhado o gráfico
     TCanvas c("canvas", "grafico", 200, 10, 1920, 1080);
     
     // Criar o objeto 
-    TH1F *h1 = new TH1F("Parametros", "Espetro de emissao alfa do americio", 1024, 0, 1023);
+    TH1F *h1 = new TH1F("Parametros", "Espetro de emissao alfa do americio", round(energy(1024)), 0, round(energy(1023)));
 
     for (int i = 1; i < N; i++)
     {
-        h1->Fill(channels[i], contagens[i]);
+        h1->Fill(energy(i), contagens[i]);
     }
     h1->SetLineWidth(0);
     h1->SetMarkerStyle(20);
@@ -81,17 +84,17 @@ int main()
     h1->SetMarkerColor(13);
 
     //tres gaussianas dos picos
-    TF1 *f1 = new TF1("f1", "gaus", 0, 1023);
+    TF1 *f1 = new TF1("f1", "gaus", 0, round(energy(1023)));
     f1->SetLineColor(kRed);
     
-    TF1 *f2 = new TF1("f2", "gaus", 0, 1023);
+    TF1 *f2 = new TF1("f2", "gaus", 0, round(energy(1023)));
     f2->SetLineColor(kBlue);
 
-    TF1 *f3 = new TF1("f3", "gaus", 0, 1023);
+    TF1 *f3 = new TF1("f3", "gaus", 0, round(energy(1023)));
     f3->SetLineColor(kGreen);
 
     //soma das tres
-    TF1 *total = new TF1("total", "gaus(0) + gaus(3) + gaus(6)", 0, 1023);
+    TF1 *total = new TF1("total", "gaus(0) + gaus(3) + gaus(6)", 0, round(energy(1023)));
     total->SetLineColor(kBlack);
     total->SetLineWidth(4);
     total->SetLineStyle(9);
@@ -100,9 +103,9 @@ int main()
                        "3Const", "3Media", "3Sigma");
 
     //fits dos 3 picos
-    h1->Fit(f1, "0W", "", 420, 440);
-    h1->Fit(f2, "0W", "", 450, 470);
-    h1->Fit(f3, "0W", "", 470, 510);
+    h1->Fit(f1, "0W", "", round(energy(410)), round(energy(440)));
+    h1->Fit(f2, "0W", "", round(energy(450)), round(energy(470)));
+    h1->Fit(f3, "0W", "", round(energy(470)), round(energy(510)));
     
     //fit dos 3 picos somados
     double par[9];
@@ -110,18 +113,18 @@ int main()
     f2->GetParameters(&par[3]);
     f3->GetParameters(&par[6]);
     total->SetParameters(par);
-    h1->Fit(total, "0W", "", 420, 510);
+    h1->Fit(total, "0W", "", round(energy(410)), round(energy(510)));
+
 
     //eixos
-    h1 ->GetXaxis()->SetRange(410,510);
-    h1 ->GetXaxis()->SetTitle("Canais");
+    h1 ->GetXaxis()->SetRange(round(energy(410)),round(energy(510)));
+    h1 ->GetXaxis()->SetTitle("Energia (KeV)");
     h1 ->GetYaxis()->SetRangeUser(0,1300);
     h1 ->GetYaxis()->SetTitle("Eventos");
-
     c.Update();
-    h1->Draw();
+    h1->Draw("E1");
     f1->Draw("SAME"); f2->Draw("SAME"); f3->Draw("SAME"); total->Draw("SAME");
-    c.SaveAs("ex1.png");
+    c.SaveAs("alfaFinal.png");
     c.WaitPrimitive();
 
     App.Run();
