@@ -77,4 +77,6 @@ int main()
     c.Update();
     c.SaveAs("betagrafico.png");
     c.WaitPrimitive();
+    _App.Run();
+
 }

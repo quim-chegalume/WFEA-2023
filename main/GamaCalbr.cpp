@@ -56,7 +56,7 @@ int main()
     graf->Fit(f1, "WR");
     graf->Draw("AP");
     c.Update();
-    c.SaveAs("gamacalibr.png");
+    c.SaveAs("betagrafico.png");
     c.WaitPrimitive();
     App.Run();
 
