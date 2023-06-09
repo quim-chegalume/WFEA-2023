@@ -81,6 +81,11 @@ int main()
     c.Update();
     c.SaveAs("betagrafico.png");
     c.WaitPrimitive();
+<<<<<<< HEAD
 
     App.Run();
+=======
+    _App.Run();
+
+>>>>>>> 4f6c27d3d2588354e26976dd1c1a20d820482e0d
 }
