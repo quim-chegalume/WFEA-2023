@@ -72,9 +72,15 @@ int main()
     TF1 *f1 = new TF1("f1", "pol1", 0, 800);
     f1->SetLineColor(kRed);
 
+    
+    graf -> SetTitle("Limite Cinematico - Kurie Plot");
+    graf -> GetXaxis() ->SetTitle("Energia [keV]");
+    graf -> GetYaxis() -> SetTitle("PHD(N,W,G)"); 
     graf->Fit(f1, "W","",300,800);
     graf->Draw("AP");
     c.Update();
     c.SaveAs("betagrafico.png");
     c.WaitPrimitive();
+
+    App.Run();
 }

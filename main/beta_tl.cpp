@@ -5,6 +5,7 @@
 #include "TCanvas.h"
 #include "TApplication.h"
 #include "TF1.h"
+#include "TLine.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -14,8 +15,7 @@ using namespace std;
 
 const int N = 1024;
 
-void ReadFileMCA(string fname, double (&Chnl)[N], double (&Cnt)[N], double (&ROI)[N])
-    {
+void ReadFileMCA(string fname, double (&Chnl)[N], double (&Cnt)[N], double (&ROI)[N]) {
         //abre ficheiro e vê se existe
         fstream DataFile;
         DataFile.open(fname, ios::in);
@@ -33,12 +33,15 @@ void ReadFileMCA(string fname, double (&Chnl)[N], double (&Cnt)[N], double (&ROI
         string linha;
         int ind=0;
         
+        
+
         while (getline(DataFile, linha)) 
         {
             istringstream iss(linha);
 
-            string valor;
             vector<string> valores;
+
+            string valor;
             while (getline(iss, valor, ','))
             {
                 valores.push_back(valor);
@@ -46,6 +49,7 @@ void ReadFileMCA(string fname, double (&Chnl)[N], double (&Cnt)[N], double (&ROI
             double canal=stod(valores[0]);
             double contagem=stod(valores[1]);
             double nrROI=stod(valores[2]);
+            valores.clear();
             Chnl[ind]=canal;
             Cnt[ind]=contagem;
             ROI[ind]=nrROI;
@@ -53,22 +57,36 @@ void ReadFileMCA(string fname, double (&Chnl)[N], double (&Cnt)[N], double (&ROI
             ind++;
         }
         DataFile.close();
-    }
+}
 
-int main()
-{
+
+
+int main() {
     double channels[N]; double contagens[N]; double ROIs[N];
-    string nome = "PIROBI.ASC";
+    string nome = "PIROTL.ASC";
 
     ReadFileMCA(nome, channels, contagens, ROIs);
 
+    
     TApplication App("A", nullptr, nullptr);
 
     // Canvas onde é desenhado o gráfico
     TCanvas c("canvas", "grafico", 200, 10, 1920, 1080);
     
     // Criar o objeto 
-    TH1F *h1 = new TH1F("h1", "histograma", 1024, 0, 1023);
+    TH1F *h1 = new TH1F("h1", "Espetro Energia Talio", 240, 0, 239);
+
+    TLine *f5 = new TLine(60, 1, 60, 900);
+    f5 -> SetLineStyle(3);
+    f5 -> SetLineColor(3);
+    f5 -> SetLineWidth(5);
+
+    TLine *f6 = new TLine(140, 1, 140, 900);
+    f6 -> SetLineColor(2);
+    f6 -> SetLineStyle(3);
+    f6 -> SetLineWidth(5);
+
+
 
     for (int i = 1; i < N; i++)
     {
@@ -76,37 +94,60 @@ int main()
         h1->Fill(channels[i], contagens[i]);
     }
     h1->SetLineWidth(0);
-    h1->SetMarkerStyle(5);
+   
 
-    /**
-    TF1 *f1 = new TF1("f1", "gaus", 420, 440);
-    f1->SetLineColor(kRed);
     
-    TF1 *f2 = new TF1("f2", "gaus", 450, 470);
-    f2->SetLineColor(kBlue);
+    //h1 -> GetYaxis() -> SetRange(0, 3000);
+    
+    /*
+    TF1 *f1 = new TF1("f1", "gaus", 0, 20);
+    f1->SetLineColor(1);
+    
+    TF1 *f2 = new TF1("f2", "gaus", 100, 110);
+    f2->SetLineColor(2);
 
-    TF1 *f3 = new TF1("f3", "gaus", 470, 510);
-    f3->SetLineColor(kPink);
+    TF1 *f3 = new TF1("f3", "gaus", 115, 125);
+    f3->SetLineColor(3);
 
-    TF1 *total = new TF1("total", "gaus(0) + gaus(3) + gaus(6)", 410, 510);
+    TF1 *f4 = new TF1("f4", "gaus", 207, 213);
+    f4->SetLineColor(4);
+
+    TF1 *f5 = new TF1("f5", "gaus", 222, 228);
+    f5->SetLineColor(5);
+
+    TF1 *total = new TF1("total", "gaus(0) + gaus(3) + gaus(6) + gaus(9) + gaus(12)", 0, 230);
     total->SetLineColor(kBlack);
 
     h1->Fit(f1, "WR");
     h1->Fit(f2, "WR+");
     h1->Fit(f3, "WR+");
-    double par[9];
+    h1->Fit(f4, "WR+");
+    h1->Fit(f5, "WR+");
+    double par[15];
     f1->GetParameters(&par[0]);
     f2->GetParameters(&par[3]);
     f3->GetParameters(&par[6]);
-    total->SetParameters(par);
+    f4->GetParameters(&par[9]);
+    f5->GetParameters(&par[12]);
 
-    h1->Fit(total, "WR+");
+    total->SetParameters(par);
     */
+    //h1->Fit(total, "WR+");
+    
+    h1 ->SetMarkerStyle(5);
+    h1 -> SetMarkerColor(4);
+
+    h1 -> GetXaxis() -> SetTitle("Canal MCA");
+    h1 -> GetYaxis() -> SetTitle("Contagens");
 
     c.Update();
     h1->Draw();
-    c.SaveAs("bi.png");
+    f6 -> Draw("same");
+
+    f5 -> Draw("same");
+    c.SaveAs("tl.png");
     c.WaitPrimitive();
 
     App.Run();
+    
 }
