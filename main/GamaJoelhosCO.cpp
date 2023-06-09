@@ -83,7 +83,7 @@ int main()
     
     // Criar o objeto 
     auto h1 = new TGraphErrors(N, energias, contagens, er_energias, er_contagens);
-    h1->SetMarkerStyle(3); h1->SetMarkerSize(1);
+    h1->SetMarkerStyle(1); h1->SetMarkerSize(1);
     h1->SetTitle("Joelhos de Compton no Cobalto");
 
 
