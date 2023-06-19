@@ -61,7 +61,7 @@ double energy(double canl) {return 1.701*canl-2.318;}
 int main()
 {
     double channels[N]; double contagens[N]; double ROIs[N];
-    string nome = "GPIRODE.ASC";
+    string nome = "GPIROAR.ASC";
 
     ReadFileMCA(nome, channels, contagens, ROIs);
 
@@ -81,21 +81,20 @@ int main()
     
     // Criar o objeto 
     auto h1 = new TGraphErrors(N, channels, contagens, er_canais, er_contagens);
-    h1->SetMarkerStyle(1); h1->SetMarkerSize(0.1);
-    h1->SetTitle("Espetro MCA da fonte desconhecida");
+    h1->SetMarkerStyle(1); h1->SetMarkerSize(1);
+    h1->SetTitle("Espetro MCA da radiacao ambiente");
 
 
     //eixos
-    h1 ->GetXaxis()->SetRangeUser(0,420);
+    h1 ->GetXaxis()->SetRangeUser(0,900);
     h1 ->GetXaxis()->SetTitle("Canal");
-    h1 ->GetYaxis()->SetRangeUser(10,10e4);
+    // h1 ->GetYaxis()->SetRangeUser(10e-1,3e3);
     h1 ->GetYaxis()->SetTitle("Contagens");
     
-    c.SetLogy();
+    // c.SetLogy();
     c.Update();
     h1->Draw("AP");
-    // f1C->Draw("Same");f2C->Draw("Same");
-    c.SaveAs("mcaDesLog.png");
+    c.SaveAs("mcaAR.png");
     c.WaitPrimitive();
 
     App.Run();
