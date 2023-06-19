@@ -91,11 +91,11 @@ int main()
     TF1 *f1 = new TF1("f1", "gaus", energy(10), energy(25));
     f1->SetLineColor(3);
     
-    TF1 *f6 = new TF1("f6", "gaus", energy(30),energy(57));
-    f6 -> SetLineColor(7);
+    //TF1 *f6 = new TF1("f6", "gaus", energy(30),energy(57));
+    //f6 -> SetLineColor(7);
     
-    TF1 *f7 = new TF1("f7", "gaus", energy(60), energy(90));
-    f7 -> SetLineColor(11);
+    //TF1 *f7 = new TF1("f7", "gaus", energy(60), energy(90));
+    //f7 -> SetLineColor(11);
     
     TF1 *f2 = new TF1("f2", "gaus", energy(100), energy(115));
     f2->SetLineColor(5);
@@ -117,15 +117,15 @@ int main()
     f1C->SetRange(0,energy(1023));
     f1C->SetLineStyle(9);f1C->SetLineWidth(2);
     
-    h1->Fit(f6, "0WR+");
-    auto *f6C = new TF1(*f6);
-    f6C->SetRange(0,energy(1023));
-    f6C->SetLineStyle(9);f6C->SetLineWidth(2);
+    //h1->Fit(f6, "0WR+");
+    //auto *f6C = new TF1(*f6);
+    //f6C->SetRange(0,energy(1023));
+    //f6C->SetLineStyle(9);f6C->SetLineWidth(2);
 
-    h1->Fit(f7, "0WR+");
-    auto *f7C = new TF1(*f7);
-    f7C->SetRange(0,energy(1023));
-    f7C->SetLineStyle(9);f7C->SetLineWidth(2);
+    //h1->Fit(f7, "0WR+");
+    //auto *f7C = new TF1(*f7);
+    //f7C->SetRange(0,energy(1023));
+    //f7C->SetLineStyle(9);f7C->SetLineWidth(2);
 
     h1->Fit(f2, "0WR+");
     auto *f2C = new TF1(*f2);
@@ -158,7 +158,8 @@ int main()
     c.Update();
     h1->Draw("AP");
     f1->Draw("Same");f2->Draw("Same");f3->Draw("Same");f4->Draw("Same");
-    f5->Draw("Same");f6->Draw("Same");f7->Draw("Same");
+    f5->Draw("Same");
+    //f6->Draw("Same");f7->Draw("Same");
     // f1C->Draw("Same");f2C->Draw("Same");f3C->Draw("Same");
     // f4C->Draw("Same");f5C->Draw("Same");f6C->Draw("Same");f7C->Draw("Same");
     c.SaveAs("FitDesLog.png");

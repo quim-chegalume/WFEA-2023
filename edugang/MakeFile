@@ -1,0 +1,18 @@
+CXXFLAGS := $(shell root-config --cflags)
+ROOTLIB := $(shell root-config --libs)
+#XXEIGEN := $(shell pkg-config --cflags eigen3)
+EIGEN_INC := -I ~/eigen-3.4.0
+HOME2 := src/homework2/FCmatrixAlgo.cpp src/homework2/EqSolver.cpp
+HOME3 := src/homework3/DataPoints.cpp src/homework3/Interpolator.cpp
+HOME4 := src/homework4/Functor.cpp src/homework4/IntegDeriv.cpp src/homework4/MyFunction.cpp
+HOME5 := src/homework5/Rwalk1D.cpp src/homework5/InteMC.cpp
+HOME6 := src/homework6/ODEpoint.cpp
+#SRC_cpp := $(wildcard src/*.cpp)
+#SRC_matrix := $(wildcard src/homework2/*.cpp)
+
+
+bin/%.exe : main/%.cpp 
+	g++ $(CXXFLAGS) $^ $(HOME2) $(HOME3) $(HOME4) $(HOME5) $(HOME6) $(EIGEN_INC) $(ROOTLIB) -I src -o $@ 
+
+clean : 
+	rm -f bin/*.o bin/*.exe
