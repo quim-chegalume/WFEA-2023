@@ -84,34 +84,68 @@ int main()
     
     // Criar o objeto 
     auto h1 = new TGraphErrors(N, energias, contagens, er_energias, er_contagens);
-    h1->SetMarkerStyle(1); h1->SetMarkerSize(1);
+    h1->SetMarkerStyle(1); h1->SetMarkerSize(1); h1->SetLineColor(14);
     h1->SetTitle("Espetro da fonte desconhecida com ajustes");
 
 
     TF1 *f1 = new TF1("f1", "gaus", energy(10), energy(25));
-    f1->SetLineColor(3);
+    f1->SetLineColor(209);f1->SetLineWidth(3);
+    h1->Fit(f1, "0WR");
+    // auto *f1C = new TF1(*f1);
+    // f1C->SetRange(0,energy(1023));
+    // f1C->SetLineStyle(9);f1C->SetLineWidth(2);
     
+<<<<<<< HEAD
     //TF1 *f6 = new TF1("f6", "gaus", energy(30),energy(57));
     //f6 -> SetLineColor(7);
     
     //TF1 *f7 = new TF1("f7", "gaus", energy(60), energy(90));
     //f7 -> SetLineColor(11);
+=======
+    TF1 *f6 = new TF1("f6", "gaus", energy(30),energy(57));
+    f6 -> SetLineColor(94);f6->SetLineWidth(3);
+    h1->Fit(f6, "0WR");
+    // auto *f6C = new TF1(*f6);
+    // f6C->SetRange(0,energy(1023));
+    // f6C->SetLineStyle(9);f6C->SetLineWidth(2);
+    
+    TF1 *f7 = new TF1("f7", "gaus", energy(60), energy(90));
+    f7 -> SetLineColor(kPink);f7->SetLineWidth(3);
+    h1->Fit(f7, "0WR");
+    // auto *f7C = new TF1(*f7);
+    // f7C->SetRange(0,energy(1023));
+    // f7C->SetLineStyle(9);f7C->SetLineWidth(2);
+>>>>>>> refs/remotes/origin/main
     
     TF1 *f2 = new TF1("f2", "gaus", energy(100), energy(115));
-    f2->SetLineColor(5);
-    
+    f2->SetLineColor(5);f2->SetLineWidth(3);
+    h1->Fit(f2, "0WR");
+    // auto *f2C = new TF1(*f2);
+    // f2C->SetRange(0,energy(1023));
+    // f2C->SetLineStyle(9);f2C->SetLineWidth(2);
+
     TF1 *f3 = new TF1("f3", "gaus", energy(240), energy(270));
-    f3->SetLineColor(2);
+    f3->SetLineColor(2);f3->SetLineWidth(3);
+    h1->Fit(f3, "0WR");
+    // auto *f3C = new TF1(*f3);
+    // f3C->SetRange(0,energy(1023));
+    // f3C->SetLineStyle(9);f3C->SetLineWidth(2);
 
     TF1 *f4 = new TF1("f4", "gaus", energy(279), energy(290));
-    f4->SetLineColor(4);
+    f4->SetLineColor(4);f4->SetLineWidth(3);
+    h1->Fit(f4, "0WR");
+    // auto *f4C = new TF1(*f4);
+    // f4C->SetRange(0,energy(1023));
+    // f4C->SetLineStyle(9);f4C->SetLineWidth(2);
 
     TF1 *f5 = new TF1("f5", "gaus", energy(340), energy(400));
-    f5->SetLineColor(6);
+    f5->SetLineColor(221);f5->SetLineWidth(3);
+    h1->Fit(f5, "0WR");
+    // auto *f4C = new TF1(*f5);
+    // f4C->SetRange(0,energy(1023));
+    // f4C->SetLineStyle(9);f4C->SetLineWidth(2);
 
-
-
-
+<<<<<<< HEAD
     h1->Fit(f1, "0WR");
     auto *f1C = new TF1(*f1);
     f1C->SetRange(0,energy(1023));
@@ -147,6 +181,8 @@ int main()
     auto *f5C = new TF1(*f5);
     f5C->SetRange(0,energy(1023));
     f5C->SetLineStyle(9);f5C->SetLineWidth(2);
+=======
+>>>>>>> refs/remotes/origin/main
 
     //eixos
     h1 ->GetXaxis()->SetRangeUser(0,energy(420));
